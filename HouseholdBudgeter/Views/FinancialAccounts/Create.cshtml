@@ -1,0 +1,52 @@
+﻿@model HouseholdBudgeter.Models.FinancialAccounts
+
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+
+<div class="bootbox modal fade bootbox-prompt in" tabindex="-1" role="dialog" aria-hidden="false" style="display: block; padding-right: 17px;">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Created)
+        <div class="modal-backdrop fade in" data-dismiss="modal">
+        </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title"><i class="fa fa-plus-circle blue"></i>&nbsp;&nbsp;&nbsp;Create Account</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="bootbox-body">
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder="Enter Account Name", @required = "required" } })
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Balance, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Balance, new { htmlAttributes = new { @class = "form-control", Type = "decimal", placeholder="Enter Initial Amount", @required = "required" } })
+                                    @Html.ValidationMessageFor(model => model.Balance, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <button data-dismiss="modal" type="button" class="btn btn-default">Cancel</button>
+                        <button data-bb-handler="confirm" type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

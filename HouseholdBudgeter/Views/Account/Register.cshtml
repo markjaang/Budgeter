@@ -1,0 +1,104 @@
+﻿@model HouseholdBudgeter.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+}
+
+
+
+@using (Html.BeginForm("Register", "Account", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    
+        <div class="position-relative">
+
+            <div class="signup-box widget-box no-border visible">
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <h4 class="header green lighter bigger">
+                            <i class="ace-icon fa fa-users blue"></i>
+                            New User Registration
+                        </h4>
+
+                        <div class="space-6"></div>
+                        <p> Enter your details to begin: </p>
+
+                        <form>
+                            @Html.AntiForgeryToken()
+                            <fieldset>
+
+                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                <label class="block clearfix">
+                                    <span class="block input-icon input-icon-right">
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Enter Email" })
+                                        <i class="ace-icon fa fa-envelope"></i>
+                                    </span>
+                                </label>
+
+                                <label class="block clearfix">
+                                    <span class="block input-icon input-icon-right">
+                                        @Html.TextBoxFor(m => m.DisplayName, new { @class = "form-control", placeholder = "Enter Display Name" })
+                                        <i class="ace-icon fa fa-user"></i>
+                                    </span>
+                                </label>
+
+                                <label class="block clearfix">
+                                    <span class="block input-icon input-icon-right">
+                                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "Enter First Name" })
+                                        <i class="ace-icon fa fa-user"></i>
+                                    </span>
+                                </label>
+
+                                <label class="block clearfix">
+                                    <span class="block input-icon input-icon-right">
+                                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Enter Last Name" })
+                                        <i class="ace-icon fa fa-user"></i>
+                                    </span>
+                                </label>
+
+                                <label class="block clearfix">
+                                    <span class="block input-icon input-icon-right">
+                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Enter Password" })
+                                        <i class="ace-icon fa fa-lock"></i>
+                                    </span>
+                                </label>
+
+                                <label class="block clearfix">
+                                    <span class="block input-icon input-icon-right">
+                                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Confirm Password" })
+                                        <i class="ace-icon fa fa-retweet"></i>
+                                    </span>
+                                </label>
+
+                                @*<label class="block">
+                                    <input type="checkbox" class="ace">
+                                    <span class="lbl">
+                                        I accept the
+                                        <a href="#">User Agreement</a>
+                                    </span>
+                                </label>*@
+
+                                <div class="space-24"></div>
+
+                                <div class="clearfix">
+                                    <button type="reset" class="width-30 pull-left btn btn-sm">
+                                        <i class="ace-icon fa fa-refresh"></i>
+                                        <span class="bigger-110">Reset</span>
+                                    </button>
+
+                                    <input type="submit" value="Register" class="width-65 pull-right btn btn-sm btn-success">
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+
+                    <div class="toolbar center">
+                        <a href="@Url.Action("Login", "Account")" data-target="#login-box" class="back-to-login-link">
+                            <i class="ace-icon fa fa-arrow-left"></i>
+                            Back to login
+                        </a>
+                    </div>
+                </div><!-- /.widget-body -->
+            </div><!-- /.signup-box -->
+        </div><!-- /.position-relative -->
+}
+
+    

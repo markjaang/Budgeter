@@ -45,3 +45,20 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+App_Start
+assets
+bin
+Content
+datepicker
+fonts
+graph
+LandingAssets
+loader
+Migrations
+obj
+Scripts
+Service References
+typed
+private.config
+Web.config
+.vs

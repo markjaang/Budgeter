@@ -1,0 +1,113 @@
+﻿@model HouseholdBudgeter.Models.Transactions
+
+@{
+    ViewBag.Title = "Reconciliation";
+    Layout = null;
+}
+
+
+
+<div class="bootbox modal fade bootbox-prompt in" tabindex="-1" role="dialog" aria-hidden="false" style="display: block; padding-right: 17px;">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.CategoryId)
+        
+        <div class="modal-backdrop fade in" data-dismiss="modal">
+        </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title"><i class="fa fa-pencil blue"></i>&nbsp;&nbsp;&nbsp;Are you sure you want to reconcile?</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="bootbox-body">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Amount, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", @required = "required", type = "decimal" } })
+                                    @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="panel-default">
+                                <table class="table">
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Category.Name)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Description)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Amount)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Reconciled)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.TransactionDate)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Created)
+                                        </th>
+                                        @if (Model.Updated != null)
+                                        {
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Updated)
+                                            </th>
+                                        }
+
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => Model.Category.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => Model.Description)
+                                        </td>
+                                        <td>
+                                            @if (Model.Active == true)
+                                            {
+                                                <p>$@Html.DisplayFor(modelItem => Model.Amount)</p>
+                                            }
+                                            else
+                                            {
+                                                <strike>$@Html.DisplayFor(modelItem => Model.Amount)</strike>
+                                            }
+
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => Model.Reconciled)
+                                        </td>
+                                        <td>
+                                            @Model.TransactionDate.ToString("d")
+                                        </td>
+                                        <td>
+                                            @Model.Created.ToString("d")
+                                        </td>
+                                        @if (Model.Updated != null)
+                                        {
+                                            <td>
+                                                @Model.Updated.Value.ToString("d")
+                                            </td>
+                                        }
+                                    </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <button data-dismiss="modal" type="button" class="btn btn-default">Cancel</button>
+                    <button data-bb-handler="confirm" type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+</div>

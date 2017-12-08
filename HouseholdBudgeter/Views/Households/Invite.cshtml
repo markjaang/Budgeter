@@ -1,0 +1,48 @@
+﻿@model HouseholdBudgeter.Models.Invitations
+@{
+    ViewBag.Title = "Invite";
+    Layout = null;
+}
+
+
+<div class="bootbox modal fade bootbox-prompt in" tabindex="-1" role="dialog" aria-hidden="false" style="display: block; padding-right: 17px;">
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.HouseholdId)
+    <div class="modal-backdrop fade in" data-dismiss="modal">
+    </div>
+    @using (Html.BeginForm("Invite", "Households", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title"><i class="fa fa-users green"></i>&nbsp;&nbsp;&nbsp;Invite</h4>
+        </div>
+        <div class="modal-body">
+        <div class="bootbox-body">
+
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+            <label class="block clearfix" style="width:500px">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.InviteName, new { @class = "form-control", placeholder = "Enter Name", @required = "required" })
+                    <i class="ace-icon fa fa-user"></i>
+                </span>
+            </label>
+            <label class="block clearfix" style="width:500px">
+                <span class="block input-icon input-icon-right">
+                    @Html.TextBoxFor(m => m.InviteEmail, new { @class = "form-control", placeholder = "Enter Email", @required = "required", type = "email" })
+                    <i class="ace-icon fa fa-envelope"></i>
+                </span>
+            </label>
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button data-dismiss ="modal" type="button" class="btn btn-default">Cancel</button>
+        <button data-bb-handler="confirm" type="submit" class="btn btn-primary">Send</button>
+        </div>
+        </div>
+    </div>
+    }
+</div>

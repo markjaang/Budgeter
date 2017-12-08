@@ -1,0 +1,365 @@
+﻿@model HouseholdBudgeter.Models.Households
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@Html.HiddenFor(model => model.Created)
+<div class="row">
+    <div class="col-md-5">
+        <!-- PAGE CONTENT BEGINS -->
+        <div class="tabbable">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="active">
+                    <a data-toggle="tab" href="#home">
+                        <i class="green ace-icon fa fa-home bigger-120"></i>
+                        Household
+                    </a>
+                </li>
+
+                <li>
+                    <a data-toggle="tab" href="#messages">
+                        Messages
+                        <span class="badge badge-danger">
+                            @Model.FinancialAccount.Where(b => b.Balance < 0).Count()
+                        </span>
+                    </a>
+                </li>
+
+                <li class="dropdown">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <i class="blue ace-icon fa fa-edit bigger-120"></i>
+                        Budget &nbsp;
+                        <i class="ace-icon fa fa-caret-down bigger-110 width-auto"></i>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-info">
+                        @if (Model.Budget.Count > 0)
+                        {
+                            foreach (var item in Model.Budget)
+                            {
+                                <li>
+                                    <a class="BudDetails" style="cursor:pointer" data-id=@item.Id>@item.Description</a>
+                                </li>
+                            }
+                        }
+                        <li>
+                            <a href="@Url.Action("Create", "Budgets")" data-target="#budcreateModal" data-toggle="modal" title="Make Budget" style="color:blue">
+                                <i class="blue ace-icon fa fa-plus-circle bigger-120"></i>
+                                Add new budget
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <i class="fa fa-list-ul"></i>
+                        Accounts &nbsp;
+                        <i class="ace-icon fa fa-caret-down bigger-110 width-auto"></i>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-info">
+                            @if (ViewBag.account != null)
+                            {
+                                foreach (var item in ViewBag.account)
+                                {
+                                    <li>
+                                        <a class="AcctDetails" style="cursor:pointer" data-id=@item.Id>@item.Name</a>
+                                    </li>
+                                }
+                            }
+                            
+                        <li>
+                            <a href="@Url.Action("Create","FinancialAccounts")" data-target="#acccrnModal" data-toggle="modal" style="color:blue">
+                                <i class="blue ace-icon fa fa-plus-circle bigger-120"></i>
+                                Add new account
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="home" class="tab-pane fade in active">
+
+                    @if (Model.Name != null)
+                    {
+                        <h5 align="center">
+                            <i class="ui-icon ace-icon fa fa-home green"></i>
+                            @Html.DisplayFor(model => model.Name)
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="@Url.Action("Invite", "Households")" data-target="#inviteModal" data-toggle="modal" title="Invite More Members">
+                                <div class="ui-pg-div" style="display:inline">
+                                    <span class="ui-icon ace-icon fa fa-users green">
+                                    </span>
+                                </div>
+                            </a>
+
+                            <a href="@Url.Action("Edit", "Households", new { id = Model.Id })" data-target="#editModal" data-toggle="modal" title="Edit Household Name">
+                                <div class="ui-pg-div" style="display:inline">
+                                    <span class="ui-icon ace-icon fa fa-pencil blue">
+                                    </span>
+                                </div>
+                            </a>
+
+                            <a href="@Url.Action("Delete", "Households", new { id = Model.Id })" data-target="#leaveModal" data-toggle="modal" title="Leave this Household">
+                                <div class="ui-pg-div" style="display:inline">
+                                    <span class="ui-icon ace-icon fa fa-external-link red">
+                                    </span>
+                                </div>
+                            </a>
+                        </h5>
+                    }
+                    else
+                    {
+                        <h5 align="center">
+                            <i class="ui-icon ace-icon fa fa-plus-circle green"></i>@ViewBag.JoinHouse
+                        </h5>
+                    }
+
+                    <hr />
+                    @if (Model.Name != null)
+                    {
+                        <dl class="dl-horizontal">
+                            @if (Model.FinancialAccount.Count > 0)
+                            {
+                                <dt>
+                                    Total Budget
+                                </dt>
+
+                                <dd>
+                                    $@ViewBag.budgetTotal
+                                </dd>
+
+                                <dt>
+                                    Remaining Budget
+                                </dt>
+
+                                <dd>
+                                    @if (ViewBag.remBud <= 0)
+                                    {
+                                        <p style="color:red" title="Insufficient budget amount for any more expenses">$@ViewBag.remBud<i class="red ace-icon fa fa-warning bigger-120" title="Insufficient budget amount for any more expenses"></i></p>
+                                    }
+                                    else
+                                    {
+                                        <p>$@ViewBag.remBud</p>
+                                    }
+
+                                </dd>
+
+                                <dt>
+                                    Total Balance
+                                </dt>
+
+                                <dd>
+                                    @if (ViewBag.amtTotal <= 0)
+                                    {
+                                        <p style="color:red" title="Insufficient balance for any more expenses">
+                                            $@ViewBag.amtTotal<i class="red ace-icon fa fa-warning bigger-120" title="Insufficient balance for any more expenses"></i>
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        <p>$@ViewBag.amtTotal</p>
+                                    }
+                                </dd>
+
+                                <dt>
+                                    Total Reconciled
+                                </dt>
+
+                                <dd>
+                                    $@ViewBag.recTotal
+                                </dd>
+
+                                <dt>
+                                    Total Income
+                                </dt>
+
+                                <dd>
+                                    $@ViewBag.incTotal
+                                </dd>
+
+                                <dt>
+                                    Total Expense
+                                </dt>
+
+                                <dd>
+                                    $@ViewBag.expTotal
+                                </dd>
+                            }
+                            else
+                            {
+                                <dt>
+                                </dt>
+                                <dd>
+                                    <a href="@Url.Action("Create","FinancialAccounts")" data-target="#acccrnModal" data-toggle="modal" style="color:blue">
+                                        @ViewBag.openACC
+                                    </a>
+                                </dd>
+                            }
+
+                                <dt>
+                                    Created On
+                                </dt>
+
+                                <dd>
+                                    @Model.Created.ToString("d")
+                                </dd>
+                                @if (Model.Updated != null)
+                                {
+                                    <dt>
+                                        Updated On
+                                    </dt>
+
+                                    <dd>
+                                        @Model.Updated.Value.ToString("d")
+                                    </dd>
+                                }
+                                <dt>
+                                    Members
+                                </dt>
+                                @foreach (var user in Model.User)
+                                {
+
+
+                                    <dd>
+                                        @Html.DisplayFor(model => user.FirstName)
+                                        @Html.DisplayFor(model => user.LastName)
+                                    </dd>
+                                }
+                            </dl>
+                    }
+                </div>
+
+                <div id="messages" class="tab-pane fade">
+                    @if (Model.Id != 0 && Model.FinancialAccount != null)
+                    {
+                        foreach (var balover in Model.FinancialAccount.Where(b => b.Balance < 0))
+                        {
+                            var bal = balover.Balance.ToString();
+                            <p>Account named '<a class="AcctDetails" title="Go to the account" style="cursor:pointer" data-id=@balover.Id>@Html.DisplayFor(modelItem => balover.Name)</a>' has been overdrafted by $ @bal</p>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="modal fade" id="inviteModal" role="dialog" aria-labelledby="displayModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="editModal" role="dialog" aria-labelledby="displayModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="leaveModal" role="dialog" aria-labelledby="displayModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="acccrnModal" role="dialog" aria-labelledby="displayModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="acceditModal" role="dialog" aria-labelledby="displayModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="accdelModal" role="dialog" aria-labelledby="displayModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="trcrnModal" role="dialog" aria-labelledby="displayModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="treditModal" role="dialog" aria-labelledby="displayModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="trdelModal" role="dialog" aria-labelledby="displayModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="trrecModal" role="dialog" aria-labelledby="displayModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="budcreateModal" role="dialog" aria-labelledby="displayModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="budeditModal" role="dialog" aria-labelledby="displayModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="buddeleteModal" role="dialog" aria-labelledby="displayModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12" style="padding-left: 0px; padding-right: 0px; margin-top: 6px;">
+            <div id="buddetails-partial">
+            </div>
+        </div>
+        <div class="col-md-12" style="padding-left: 0px; padding-right: 0px; margin-top: 6px;">
+            <div id="transdetails-partial">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-7">
+        <div id="accdetails-partial">
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts { 
+<script>
+    $(document).ready(function () {
+        $("#accdetails-partial").load('/FinancialAccounts/_AcctDetails/' + @ViewBag.AcctId);
+    })
+</script>
+<script>
+    $(".AcctDetails").click(function () {
+        $("#accdetails-partial").load('/FinancialAccounts/_AcctDetails/' + $(this).data('id'));
+    })
+</script>
+<script>
+    $(".BudDetails").click(function () {
+        $("#buddetails-partial").load('/Budgets/_BudDetails/' + $(this).data('id'));
+    })
+</script>
+<script>
+    $(document).on("click", ".TransDetails", function () {
+        $("#transdetails-partial").load('/Transactions/_TransDetails/' + $(this).data('id'));
+    })
+</script>
+}

@@ -1,0 +1,135 @@
+﻿@model HouseholdBudgeter.Models.Households
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs" id="myTab">
+                        <li class="active">
+                            <a data-toggle="tab" href="#home">
+                                <i class="green ace-icon fa fa-home bigger-120"></i>
+                                Household
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a data-toggle="tab" href="#messages">
+                                Messages
+                                <span class="badge badge-danger">4</span>
+                            </a>
+                        </li>
+
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                Accounts &nbsp;
+                                <i class="ace-icon fa fa-caret-down bigger-110 width-auto"></i>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-info">
+                                @foreach (var item in Model.FinancialAccount)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Details","FinancialAccounts", new { id = item.Id })">@Html.DisplayFor(modelItem => item.Name)</a>
+                                    </li>
+                                }
+                                
+                                <li>
+                                    <a href="@Url.Action("Create","FinancialAccounts")">Add new account</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="home" class="tab-pane fade in active">
+                            @if (Model.Name != null)
+                            {
+                                <h4>
+                                    @Html.DisplayFor(model => model.Name)
+
+
+                                    <a href="@Url.Action("Edit", "Households", new { id = Model.Id })" title="Edit Household Name" data-original-title="Edit Household Name">
+                                        <div class="ui-pg-div" style="display:inline" align="right">
+                                            <span class="ui-icon ace-icon fa fa-pencil blue">
+                                            </span>
+                                        </div>
+                                    </a>
+
+                                    <a href="@Url.Action("Delete", "Households", new { id = Model.Id })" title="Leave this Household" data-original-title="Leave this Household">
+                                        <div class="ui-pg-div" style="display:inline" align="right">
+                                            <span class="ui-icon ace-icon fa fa-trash-o red">
+                                            </span>
+                                        </div>
+                                    </a>
+                                </h4>
+                            }
+                            else
+                            {
+                                <text>First create or join a household</text>
+                            }
+
+                            <hr />
+                            @if (Model.Name != null)
+                            {
+                                <dl class="dl-horizontal">
+                                    <dt>
+                                        @Html.DisplayNameFor(model => model.Created)
+                                    </dt>
+
+                                    <dd>
+                                        @Model.Created.ToString("d")
+                                    </dd>
+                                    <dt>
+                                        Members
+                                    </dt>
+                                    @foreach (var user in Model.User)
+                                    {
+
+
+                                        <dd>
+                                            @Html.DisplayFor(model => user.FirstName)
+                                            @Html.DisplayFor(model => user.LastName)
+                                        </dd>
+                                    }
+
+                                    <dd>
+                                        @Html.ActionLink("Invite more members", "Invite", "Households")
+                                    </dd>
+
+                                    <dt>
+                                        @Html.ActionLink("Bank Accounts", "Index", "FinancialAccounts")
+                                    </dt>
+
+                                </dl>
+                            }
+                            else
+                            {
+                                <div class="col-md-offset-2 col-md-10">
+                                    <a href="@Url.Action("CreateJoinHousehold","Households")" class="btn btn-default">Create or Join</a>
+                                </div>
+                            }
+                        </div>
+
+                        <div id="messages" class="tab-pane fade">
+                            <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.</p>
+                        </div>
+
+                        <div id="dropdown1" class="tab-pane fade">
+                            <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade.</p>
+                        </div>
+
+                        <div id="dropdown2" class="tab-pane fade">
+                            <p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin.</p>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.col -->
+            <div class="vspace-6-sm"></div>
+        </div>
+    </div>
+</div>

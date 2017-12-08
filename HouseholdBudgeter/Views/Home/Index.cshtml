@@ -1,0 +1,160 @@
+﻿@model HouseholdBudgeter.Models.Households
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<link href="~/graph/morris.js-0.5.1/morris.css" rel="stylesheet" />
+<meta charset=utf-8 />
+
+<div class="col-xs-6">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Household Income vs Budget</h4>
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+            <div id="MyChart"></div>
+        </div>
+        <!-- /.panel-body -->
+    </div>
+    <!-- /.panel -->
+</div>
+
+<div class="col-xs-6">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Account Income vs Expense</h4>
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+            <a href="@Url.Action("Index","Households")">@ViewBag.AccCrt</a>
+            <div id="graph"></div>
+        </div>
+        <!-- /.panel-body -->
+    </div>
+    <!-- /.panel -->
+</div>
+
+<div class="panel panel-default col-xs-12" style="padding-right:0px; padding-left:0px">
+    <div class="panel-heading">
+        <h4>Recent Transactions</h4>
+    </div>
+    <div class="panel-body">
+<div>
+@if (Model.FinancialAccount.Count > 0)
+{
+
+    foreach (var acc in Model.FinancialAccount)
+    {
+    <table id="dynamic-table" class="table table-striped table-bordered table-hover" style="padding-right:0px; padding-left:0px">
+        <thead>
+            <tr>
+                @acc.Name
+                <th>Transaction</th>
+                <th>Credit</th>
+                <th>Debit</th>
+                <th>Created On</th>
+            </tr>
+        </thead>      
+        <tbody>
+    @foreach (var tr in acc.Transaction.OrderByDescending(u => u.Created).Take(3))
+    {
+
+        <tr>
+            <td>                        
+                @tr.Description                   
+            </td>
+            <td>
+                @if(tr.Category.Expense == false)
+                {
+                    <p>+$@tr.Amount</p>
+                }
+               
+            </td>
+            <td>
+                @if (tr.Category.Expense == true)
+                {
+                    <p>-$@tr.Amount</p>
+                }
+
+            </td>
+            <td>
+                @tr.Created.ToString("d")
+            </td>
+        </tr>
+     }   
+        </tbody>
+    </table>
+     }
+}
+else
+{
+    <p>Currently you don't have any accounts</p>
+}
+</div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+@section scripts{
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<script type="text/javascript">
+    var chartData;
+    $.post('@Url.Action("GetChart","Home")').then
+    (function (response) {
+        new Morris.Donut({
+            element: 'MyChart',
+            data: response,
+            labelColor: '#060',
+            colors: ['#438eb9', '#d15b47']
+        });
+        chartData = response;
+        
+    });
+    
+
+    $(window).on('resize', function () {
+        debugger;
+        $('#MyChart').empty();
+        new Morris.Donut({
+            element: 'MyChart',
+            data: chartData
+        });
+    });
+
+    var chartData2;
+    $.post('@Url.Action("GetBar","Home")').then
+        (function (response) {
+            chartData2 = response;
+            barChart = Morris.Bar({
+                element: 'graph',
+                data: response,
+                resize: false,
+                xkey: 'name',
+                ykeys: ['income', 'expense'],
+                labels: ['Account Income', 'Account Expense'],
+                xLabelMargin: 2,
+                gridTextColor: '#555',
+                barColors: ['#2d5a2d', '#ffb752'],
+                xLabelAngle: 25,
+                gridTextFamily: 'Montserrat',
+                gridTextSize: 13,
+                preUnits: '$'
+            });
+        });
+
+            $(window).on('resize', function () {
+                barChart.setData(chartData2);
+            });
+</script>
+    }
+

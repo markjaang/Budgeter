@@ -1,0 +1,72 @@
+﻿@model HouseholdBudgeter.Models.Budgets
+
+@{
+    ViewBag.Title = "Details";
+    Layout = null;
+}
+
+
+<div class="col-sm-12" style="padding-left:0px; padding-right:0px">
+    <div class="widget-box">
+        <div class="widget-header" align="center">
+            <h5 class="widget-title lighter smaller">
+                <i class="ui-icon ace-icon fa fa-edit blue"></i>
+                @Html.DisplayFor(model => model.Description)
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="@Url.Action("Edit", "Budgets", new { id = Model.Id })" data-target="#budeditModal" data-toggle="modal" title="Edit Account">
+                    <div class="ui-pg-div" style="display:inline">
+                        <span class="ui-icon ace-icon fa fa-pencil blue">
+                        </span>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Delete", "Budgets", new { id = Model.Id })" data-target="#buddeleteModal" data-toggle="modal" title="Delete Account" data-original-title="Delete Account">
+                    <div class="ui-pg-div" style="display:inline">
+                        <span class="ui-icon ace-icon fa fa-trash-o red">
+                        </span>
+                    </div>
+                </a>
+            </h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <div class="dialogs">
+                    <div class="itemdiv dialogdiv">
+                        <dl class="dl-horizontal">
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Amount)
+                            </dt>
+
+                            <dd>
+                                $@Html.DisplayFor(model => model.Amount)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Created)
+                            </dt>
+
+                            <dd>
+                                @Model.Created.ToString("d")
+                            </dd>
+
+                            @if (Model.Updated != null)
+                            {
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.Updated)
+                                </dt>
+
+                                <dd>
+                                    @Model.Updated.Value.ToString("d")
+                                </dd>
+                            }
+
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        

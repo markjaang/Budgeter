@@ -1,0 +1,86 @@
+﻿@model HouseholdBudgeter.Models.Transactions
+
+@{
+    ViewBag.Title = "Details";
+    Layout = null;
+}
+
+<!-- PAGE CONTENT BEGINS -->
+<div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+            <h5 align="center">
+                <i class="ui-icon ace-icon fa fa-credit-card green"></i>
+                Transaction Details
+
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="@Url.Action("Index", "Households")" title="Go back to household">
+                    <div class="ui-pg-div" style="display:inline">
+                        <span class="ui-icon ace-icon fa fa-share blue">
+                        </span>
+                    </div>
+                </a>
+                </h5>
+                <hr />
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Category.Name)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Category.Name)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Description)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Amount)
+                    </dt>
+
+                    <dd>
+                        $@Html.DisplayFor(model => model.Amount)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Reconciled)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Reconciled)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.TransactionDate)
+                    </dt>
+
+                    <dd>
+                        @Model.TransactionDate.ToString("d")
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Created)
+                    </dt>
+
+                    <dd>
+                        @Model.Created.ToString("d")
+                    </dd>
+                    @if (Model.Updated != null)
+                    {
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Updated)
+                        </dt>
+
+                        <dd>
+                            @Model.Updated.Value.ToString("d")
+                        </dd>
+                    }
+
+                </dl>
+            </div>
+        </div>
+

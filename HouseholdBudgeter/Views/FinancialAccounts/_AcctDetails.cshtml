@@ -1,0 +1,260 @@
+﻿@model HouseholdBudgeter.Models.FinancialAccounts
+
+@{
+    ViewBag.Title = "Details";
+    Layout = null;
+}
+<div class="col-sm-12">
+    <div class="widget-box">
+        <div class="widget-header" align="center">
+            <h5 class="widget-title lighter smaller">
+                <i class="ui-icon ace-icon fa fa-bank green"></i>
+                @Html.DisplayFor(model => model.Name)
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="@Url.Action("Edit", "FinancialAccounts", new { id = Model.Id })" data-target="#acceditModal" data-toggle="modal" title="Edit Account">
+                    <div class="ui-pg-div" style="display:inline">
+                        <span class="ui-icon ace-icon fa fa-pencil blue">
+                        </span>
+                    </div>
+                </a>
+
+                <a href="@Url.Action("Delete", "FinancialAccounts", new { id = Model.Id })" data-target="#accdelModal" data-toggle="modal" title="Delete Account" data-original-title="Delete Account">
+                    <div class="ui-pg-div" style="display:inline">
+                        <span class="ui-icon ace-icon fa fa-trash-o red">
+                        </span>
+                    </div>
+                </a>
+            </h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <div class="dialogs">
+                    <div class="itemdiv dialogdiv">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                Total Budget
+                            </dt>
+
+                            <dd>
+                                $@ViewBag.budgetTotal
+                            </dd>
+
+                            <dt>
+                                Remaining Budget
+                            </dt>
+
+                            <dd>
+                                @if (ViewBag.remBud <= 0)
+                                {
+                                    <p style="color:red" title="Insufficient budget amount for any more expenses">$@ViewBag.remBud<i class="red ace-icon fa fa-warning bigger-120" title="Insufficient budget amount for any more expenses"></i></p>
+                                }
+                                else
+                                {
+                                    <p>$@ViewBag.remBud</p>
+                                }
+
+                            </dd>
+
+                            <dt>
+                                Total Balance
+                            </dt>
+
+                            <dd>
+                                @if (ViewBag.totalAmt <= 0)
+                                {
+                                    <p style="color:red" title="Insufficient balance for any more expenses">$@ViewBag.totalAmt<i class="red ace-icon fa fa-warning bigger-120" title="Insufficient balance for any more expenses"></i>
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p>$@ViewBag.totalAmt</p>
+                                }
+
+                            </dd>
+
+                            <dt>
+                                Total Reconciled
+                            </dt>
+
+                            <dd>
+                                $@ViewBag.recAmount
+                            </dd>
+
+                            <dt>
+                                Total Income
+                            </dt>
+
+                            <dd>
+                                $@ViewBag.incTotal
+                            </dd>
+
+                            <dt>
+                                Total Expense
+                            </dt>
+
+                            <dd>
+                                $@ViewBag.expTotal
+                            </dd>
+
+                            <dt>
+                                Created On
+                            </dt>
+
+                            <dd>
+                                @Model.Created.ToString("d")
+                            </dd>
+                            @if (Model.Updated != null)
+                            {
+                                <dt>
+                                    Updated On
+                                </dt>
+
+                                <dd>
+                                    @Model.Updated.Value.ToString("d")
+                                </dd>
+                            }
+
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-sm-12">
+    <div class="widget-box">
+        <div class="widget-header" align="center">
+            <h5 class="widget-title lighter smaller">
+                <i class="ace-icon fa fa-credit-card green"></i>
+                Transaction
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="@Url.Action("Create", "Transactions", new { id = Model.Id })" data-target="#trcrnModal" data-toggle="modal" title="Create Transaction" data-original-title="Create Transaction">
+                    <div class="ui-pg-div" style="display:inline">
+                        <span class="ui-icon ace-icon fa fa-plus-circle blue">
+                        </span>
+                    </div>
+                </a>
+            </h5>
+        </div>
+
+        <div class="widget-body">
+            <div class="widget-main no-padding">
+                <div class="dialogs" style="padding-right:0px; padding-left:0px; padding-bottom:0px">
+                    <div class="itemdiv dialogdiv">
+                        <table id="dynamic-table" class="table table-striped table-bordered table-hover" style="padding-right:0px; padding-left:0px">
+                                <tr>
+                                    <th>
+                                        Description
+                                    </th>
+                                    <th>
+                                        Credit
+                                    </th>
+                                    <th>
+                                        Debit
+                                    </th>
+                                    <th>
+                                        Reconciled
+                                    </th>
+                                    <th></th>
+                                </tr>
+
+                                @foreach (var item in Model.Transaction)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a class="TransDetails" title="Transaction Details" style="cursor:pointer" data-id=@item.Id>@Html.DisplayFor(modelItem => item.Description)</a>
+                                        </td>
+                                        <td>
+                                            @if (item.Active == true && item.Category.Expense == false)
+                                            {
+                                                <p>+$@Html.DisplayFor(modelItem => item.Amount)</p>
+                                            }
+                                            else if (item.Active == false && item.Category.Expense == false)
+                                            {
+                                                <strike><p>$@Html.DisplayFor(modelItem => item.Amount)</p></strike>
+                                            }
+
+                                        </td>
+                                        <td>
+                                            @if (item.Active == true && item.Category.Expense == true)
+                                            {
+                                                <p>-$@Html.DisplayFor(modelItem => item.Amount)</p>
+                                            }
+                                            else if (item.Active == false && item.Category.Expense == true)
+                                            {
+                                                <strike><p>$@Html.DisplayFor(modelItem => item.Amount)</p></strike>
+                                            }
+
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Reconciled)
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("Edit", "Transactions", new { id = item.Id })" data-target="#treditModal" data-toggle="modal" title="Edit Transaction" data-original-title="Edit Transaction">
+                                                <div class="ui-pg-div" style="display:inline">
+                                                    <span class="ui-icon ace-icon fa fa-pencil blue">
+                                                    </span>
+                                                </div>
+                                            </a>
+                                            <a class="TransDetails" title="Transaction Details" style="cursor:pointer" data-id=@item.Id>
+                                                <div class="ui-pg-div" style="display:inline">
+                                                    <span class="ui-icon ace-icon fa fa-search-plus green">
+                                                    </span>
+                                                </div>
+                                            </a>
+                                            <a href="@Url.Action("Delete", "Transactions", new { id = item.Id })" data-target="#trdelModal" data-toggle="modal" title="Delete Transaction">
+                                                <div class="ui-pg-div" style="display:inline">
+                                                    <span class="ui-icon ace-icon fa fa-trash-o red">
+                                                    </span>
+                                                </div>
+                                            </a>
+                                            @if (item.Reconciled == false && item.Active == true)
+                                            {
+                                                <a href="@Url.Action("Reconcile", "Transactions", new { id = item.Id })" data-target="#trrecModal" data-toggle="modal" title="Reconcile Transaction">
+                                                    <div class="ui-pg-div" style="display:inline">
+                                                        <span class="ui-icon ace-icon fa fa-money grey">
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                            }
+                                            
+
+                                            @if (item.Active == true)
+                                            {
+                                                <a href="@Url.Action("Void", "Transactions", new { id = item.Id })" title="Void Transaction">
+                                                    <div class="ui-pg-div" style="display:inline">
+                                                        <span class="ui-icon ace-icon fa fa-ban red">
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action("Void", "Transactions", new { id = item.Id })" title="Unvoid Transaction">
+                                                    <div class="ui-pg-div" style="display:inline">
+                                                        <span class="ui-icon ace-icon fa fa-reply green">
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+
+                            </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/js/ace-elements.min.js"></script>
+<script src="~/assets/js/ace.min.js"></script>
+<script>
+    $('.dialogs').ace_scroll({
+        size: 300
+    });
+</script>
+
